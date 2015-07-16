@@ -1,0 +1,10 @@
+Pod::Spec.new do |spec|
+  spec.name         = 'JavascriptEngine'
+  spec.version      = '0.0.1'
+  spec.license      = { :type => 'MIT' }
+  spec.homepage     = 'https://github.com/pcperini/JavascriptEngine'
+  spec.authors      = { 'Patrick Perini' => 'pcperini@gmail.com' }
+  spec.summary      = 'A Swift interface for bridging to WebKit Javascript, without wanting to kill yourself or others.'
+  spec.source       = { :git => 'https://github.com/pcperini/JavascriptEngine.git' }
+  spec.source_files = 'JSEngine.swift'
+end
