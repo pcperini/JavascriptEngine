@@ -8,7 +8,7 @@ let engine = JSEngine(sourceString: "function foo(bar) {" +
     "engine.fooHandler.postMessage([bar, bar]);" +
 "}")
 
-engine.setHandlerForKey("fooHandler") { (bars: [String])
+engine.setHandlerForKey("fooHandler") { (bars: [String]) in
     println(bars.map { "why would want to do this?" })
 }
 
