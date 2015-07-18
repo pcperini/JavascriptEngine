@@ -12,7 +12,7 @@ import WebKit
 class JSEngine: NSObject {
     // MARK: Constants
     private static let globalVars = "var engine = window.webkit.messageHandlers;"
-    private static let mainFunc = "engine.load.postMessage(null);"
+    private static let mainFunc = "window.onload = function () {engine.load.postMessage(null);}"
     
     // MARK: Properties
     private var webView: WKWebView
@@ -55,9 +55,14 @@ class JSEngine: NSObject {
         
         self.webView = WKWebView(frame: CGRect(),
             configuration: config)
+        (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView)
         
         super.init()
         self.setHandlerForKey("httpRequest", handler: self.httpRequestHandler)
+    }
+    
+    deinit {
+        self.webView.removeFromSuperview()
     }
     
     // MARK: Accessors
