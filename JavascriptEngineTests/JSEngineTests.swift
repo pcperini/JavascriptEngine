@@ -1,5 +1,5 @@
 //
-//  JavascriptEngineTests.swift
+//  JSEngineTests.swift
 //  JavascriptEngineTests
 //
 //  Created by PATRICK PERINI on 7/14/15.
@@ -9,7 +9,7 @@
 import UIKit
 import XCTest
 
-class JavascriptEngineTests: XCTestCase {
+class JSEngineTests: XCTestCase {
     static let defaultTimeout: NSTimeInterval = 5
     
     func testLoading() {
@@ -19,7 +19,7 @@ class JavascriptEngineTests: XCTestCase {
         engine.load {
             expectation.fulfill()
         }
-        self.waitForExpectationsWithTimeout(JavascriptEngineTests.defaultTimeout, handler: nil)
+        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
     
     func testDebug() {
@@ -39,7 +39,7 @@ class JavascriptEngineTests: XCTestCase {
             engine.callFunction("debugTest", args: [message])
         }
         
-        self.waitForExpectationsWithTimeout(JavascriptEngineTests.defaultTimeout, handler: nil)
+        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
     
     func testError() {
@@ -59,7 +59,7 @@ class JavascriptEngineTests: XCTestCase {
             engine.callFunction("errorTest", args: [message])
         }
         
-        self.waitForExpectationsWithTimeout(JavascriptEngineTests.defaultTimeout, handler: nil)
+        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
     
     func testHTTPGet() {
@@ -95,7 +95,7 @@ class JavascriptEngineTests: XCTestCase {
             engine.callFunction("requestTest", args: [url, expectedResponse])
         }
         
-        self.waitForExpectationsWithTimeout(JavascriptEngineTests.defaultTimeout * 10, handler: nil)
+        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout * 10, handler: nil)
     }
     
     func testCustomHandler() {
@@ -116,6 +116,6 @@ class JavascriptEngineTests: XCTestCase {
             engine.callFunction("handlerTest", args: [message])
         }
         
-        self.waitForExpectationsWithTimeout(JavascriptEngineTests.defaultTimeout, handler: nil)
+        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
 }
