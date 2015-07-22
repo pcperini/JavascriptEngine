@@ -8,6 +8,7 @@
 
 import UIKit
 import WebKit
+import AFNetworking
 
 class JSEngine: NSObject {
     // MARK: Constants
@@ -105,50 +106,86 @@ class JSEngine: NSObject {
     private func httpRequestHandler(requestObject: AnyObject!) {
         if let request = requestObject as? NSDictionary {
             let responseHandler = requestObject["responseHandler"] as! String
-            let method = requestObject["method"] as? String ?? "GET"
-
+            
+            // Get URL
             let baseURL = NSURL(string: (requestObject["baseURL"] as? String) ?? "")
             var path = requestObject["path"] as? String ?? "/"
             
-            if let params = requestObject["params"] as? [String: AnyObject] {
-                var paramPairs: [String] = []
-                for (key, value) in params {
-                    let (safeKey, safeValue) = (
-                        key.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!,
-                        value.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
-                    )
-                    
-                    paramPairs.append("\(safeKey)=\(safeValue)")
+            let networkManager = AFHTTPRequestOperationManager(baseURL: baseURL)
+            networkManager.responseSerializer = AFHTTPResponseSerializer()
+            networkManager.completionQueue = dispatch_get_main_queue()
+            
+            // Get method
+            let methodString = requestObject["method"] as? String ?? "GET"
+            let method: ((URLString: String!, parameters: AnyObject!, success: ((AFHTTPRequestOperation!, AnyObject!) -> Void)!, failure: ((AFHTTPRequestOperation!, NSError!) -> Void)!) -> AFHTTPRequestOperation!)
+            
+            switch (methodString) {
+            case "GET":
+                method = networkManager.GET
+            case "POST":
+                method = networkManager.POST
+            case "PUT":
+                method = networkManager.PUT
+            case "DELETE":
+                method = networkManager.DELETE
+            case "PATCH":
+                method = networkManager.PATCH
+            case "HEAD":
+                method = { (URLString: String!, parameters: AnyObject!, success: ((AFHTTPRequestOperation!, AnyObject!) -> Void)!, failure: ((AFHTTPRequestOperation!, NSError!) -> Void)!) in
+                    return networkManager.HEAD(URLString,
+                        parameters: parameters,
+                        success: { (op: AFHTTPRequestOperation!) -> Void in
+                            success(op, NSNull())
+                    }, failure: failure)
                 }
                 
-                let paramsString = "&".join(paramPairs)
-                path = "\(path)?\(paramsString)"
-            }
-            
-            let fullURL = NSURL(string: path, relativeToURL: baseURL)!
-            var urlRequest = NSMutableURLRequest(URL: fullURL)
-            urlRequest.HTTPMethod = method
-            
-            if let headers = requestObject["headers"] as? [String: String] {
-                for (key, value) in headers {
-                    urlRequest.setValue(value, forHTTPHeaderField: key)
+            default:
+                method = { (URLString: String!, parameters: AnyObject!, success: ((AFHTTPRequestOperation!, AnyObject!) -> Void)!, failure: ((AFHTTPRequestOperation!, NSError!) -> Void)!) in
+                    failure(nil, nil)
+                    return nil
                 }
             }
             
-            if let body = requestObject["body"] as? NSObject {
-                urlRequest.HTTPBody = NSJSONSerialization.dataWithJSONObject(body,
-                    options: nil,
-                    error: nil)
+            // Get headers
+            if let headers = requestObject["headers"] as? [String: String] {
+                for (key, value) in headers {
+                    networkManager.requestSerializer.setValue(value, forHTTPHeaderField: key)
+                }
+            }
+            
+            // Get params
+            var allParams: [String: AnyObject] = [:]
+            if let params = requestObject["params"] as? [String: AnyObject] {
+                for (key, value) in params {
+                    allParams[key] = value
+                }
+            }
+            
+            if let body = requestObject["body"] as? [String: AnyObject] {
+                for (key, value) in body {
+                    allParams[key] = value
+                }
             }
             
             let userInfo = requestObject["userInfo"] as? NSDictionary ?? NSDictionary()
-            NSURLConnection.sendAsynchronousRequest(urlRequest, queue: NSOperationQueue.mainQueue()) { (response: NSURLResponse!, data: NSData!, error: NSError!) in
-                let dataString = NSString(data: data, encoding: NSUTF8StringEncoding) ?? ""
+            method(URLString: path, parameters: allParams, success: { (op: AFHTTPRequestOperation!, resp: AnyObject!) in
+                let respString: String
+                if let respData = resp as? NSData {
+                    respString = (NSString(data: respData, encoding: NSUTF8StringEncoding) as? String) ?? ""
+                } else {
+                    respString = ""
+                }
+                
                 self.callFunction(responseHandler, args: [
-                    dataString,
+                    respString,
                     userInfo
                 ])
-            }
+            }, failure: { (op: AFHTTPRequestOperation!, error: NSError!) in
+                self.callFunction(responseHandler, args: [
+                    "",
+                    userInfo
+                ])
+            })
         }
     }
 }
