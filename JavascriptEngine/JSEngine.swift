@@ -130,6 +130,7 @@ class JSEngine: NSObject {
                 method = networkManager.DELETE
             case "PATCH":
                 method = networkManager.PATCH
+                
             case "HEAD":
                 method = { (URLString: String!, parameters: AnyObject!, success: ((AFHTTPRequestOperation!, AnyObject!) -> Void)!, failure: ((AFHTTPRequestOperation!, NSError!) -> Void)!) in
                     return networkManager.HEAD(URLString,
@@ -167,6 +168,7 @@ class JSEngine: NSObject {
                 }
             }
             
+            // Make call
             let userInfo = requestObject["userInfo"] as? NSDictionary ?? NSDictionary()
             method(URLString: path, parameters: allParams, success: { (op: AFHTTPRequestOperation!, resp: AnyObject!) in
                 let respString: String
