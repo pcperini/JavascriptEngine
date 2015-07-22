@@ -16,7 +16,7 @@ class JSEngine: NSObject {
     private static let mainFunc = "window.onload = function () {engine.load.postMessage(null);}"
     
     // MARK: Properties
-    private var webView: WKWebView
+    private var webView: WKWebView?
     private var messageHandlers: [String: (AnyObject!) -> Void] = [:]
     
     var debugHandler: ((AnyObject!) -> Void)? {
@@ -29,14 +29,38 @@ class JSEngine: NSObject {
         set { self.setHandlerForKey("error", handler: newValue) }
     }
     
-    private var source: String {
-        return self.webView.configuration.userContentController.userScripts.reduce("") {
+    private var source: String? {
+        return self.webView?.configuration.userContentController.userScripts.reduce("") {
             "\($0)\n\($1.source!)"
         }
     }
     
     // MARK: Initializers
-    init(sourceString: String) {
+    override init() {
+        super.init()
+    }
+    
+    convenience init(sourceString: String) {
+        self.init()
+        self.setSourceString(sourceString)
+    }
+    
+    deinit {
+        self.webView?.removeFromSuperview()
+    }
+    
+    // MARK: Accessors
+    func handlerForKey(key: String) -> ((AnyObject!) -> Void)? {
+        return self.messageHandlers[key]
+    }
+    
+    // MARK: Mutators
+    func setHandlerForKey(key: String, handler: ((AnyObject!) -> Void)?) {
+        self.webView?.configuration.userContentController.addScriptMessageHandler(self, name: key)
+        self.messageHandlers[key] = handler
+    }
+    
+    internal func setSourceString(sourceString: String) {
         let contentController = WKUserContentController()
         
         contentController.addUserScript(WKUserScript(source: JSEngine.globalVars,
@@ -56,31 +80,15 @@ class JSEngine: NSObject {
         
         self.webView = WKWebView(frame: CGRect(),
             configuration: config)
-        (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView)
+        (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView!)
         
-        super.init()
         self.setHandlerForKey("httpRequest", handler: self.httpRequestHandler)
-    }
-    
-    deinit {
-        self.webView.removeFromSuperview()
-    }
-    
-    // MARK: Accessors
-    func handlerForKey(key: String) -> ((AnyObject!) -> Void)? {
-        return self.messageHandlers[key]
-    }
-    
-    // MARK: Mutators
-    func setHandlerForKey(key: String, handler: ((AnyObject!) -> Void)?) {
-        self.webView.configuration.userContentController.addScriptMessageHandler(self, name: key)
-        self.messageHandlers[key] = handler
     }
     
     // MARK: Load Handlers
     func load(handler: (() -> Void)? = nil) {
         self.setHandlerForKey("load", handler: { (_: AnyObject!) in handler?() })
-        self.webView.loadHTMLString("<html></html>", baseURL: nil)
+        self.webView?.loadHTMLString("<html></html>", baseURL: nil)
     }
     
     func callFunction(function: String, thisArg: String = "null", args: [AnyObject]) {
@@ -100,9 +108,20 @@ class JSEngine: NSObject {
             "engine.error.postMessage(err + '');" +
         "}"
         
-        self.webView.evaluateJavaScript(call, completionHandler: nil)
+        self.webView?.evaluateJavaScript(call, completionHandler: nil)
     }
-    
+}
+
+extension JSEngine: WKScriptMessageHandler {
+    @objc func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.handlerForKey(message.name)?(message.body)
+        }
+    }
+}
+
+// MARK: Default Handlers
+extension JSEngine {
     private func httpRequestHandler(requestObject: AnyObject!) {
         if let request = requestObject as? NSDictionary {
             let responseHandler = requestObject["responseHandler"] as! String
@@ -188,14 +207,6 @@ class JSEngine: NSObject {
                     userInfo
                 ])
             })
-        }
-    }
-}
-
-extension JSEngine: WKScriptMessageHandler {
-    @objc func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.handlerForKey(message.name)?(message.body)
         }
     }
 }

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		73536A4D1B5DC12000D2B345 /* JSRemoteSourceFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73536A4C1B5DC12000D2B345 /* JSRemoteSourceFileTests.swift */; };
 		73536A4E1B5DC1D100D2B345 /* JSRemoteSourceFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */; };
+		73583D681B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73583D671B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift */; };
+		73583D691B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73583D671B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift */; };
 		73A03F371B55D3910091115C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A03F361B55D3910091115C /* AppDelegate.swift */; };
 		73A03F391B55D3910091115C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A03F381B55D3910091115C /* ViewController.swift */; };
 		73A03F3C1B55D3910091115C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73A03F3A1B55D3910091115C /* Main.storyboard */; };
@@ -37,6 +39,7 @@
 /* Begin PBXFileReference section */
 		4D4BD283C9FB2659369DC582 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		73536A4C1B5DC12000D2B345 /* JSRemoteSourceFileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSRemoteSourceFileTests.swift; sourceTree = "<group>"; };
+		73583D671B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSEngine+RemoteSourceFile.swift"; sourceTree = "<group>"; };
 		73A03F311B55D3910091115C /* JavascriptEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JavascriptEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73A03F351B55D3910091115C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73A03F361B55D3910091115C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +120,7 @@
 				73A03F341B55D3910091115C /* Supporting Files */,
 				73A03F561B55D3AB0091115C /* JSEngine.swift */,
 				73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */,
+				73583D671B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift */,
 			);
 			path = JavascriptEngine;
 			sourceTree = "<group>";
@@ -356,6 +360,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73583D681B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift in Sources */,
 				73A03F391B55D3910091115C /* ViewController.swift in Sources */,
 				73E6D19E1B5C47840079D5D6 /* JSRemoteSourceFile.swift in Sources */,
 				73A03F371B55D3910091115C /* AppDelegate.swift in Sources */,
@@ -367,6 +372,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73583D691B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift in Sources */,
 				73A03F681B5822190091115C /* JSEngine.swift in Sources */,
 				73536A4E1B5DC1D100D2B345 /* JSRemoteSourceFile.swift in Sources */,
 				73536A4D1B5DC12000D2B345 /* JSRemoteSourceFileTests.swift in Sources */,
