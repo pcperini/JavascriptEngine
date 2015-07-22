@@ -108,7 +108,7 @@ class JSRemoteSourceFile: NSObject {
         }
     }
     
-    private func updateContentFromFileAtPath(filePath: String, completion: (() -> Void)? = nil) {
+    private func updateContentFromFileAtPath(filePath: String) {
         self.updatingFromLocal = true
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
             let content = NSString(contentsOfFile: filePath,
@@ -117,23 +117,17 @@ class JSRemoteSourceFile: NSObject {
             
             dispatch_async(dispatch_get_main_queue()) {
                 self.content = content
-                completion?()
-                
                 self.updatingFromLocal = false
             }
         }
     }
     
-    private func saveContentToFileAtPath(filePath: String, completion: (() -> Void)? = nil) {
+    private func saveContentToFileAtPath(filePath: String) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
             self.content?.writeToFile(filePath,
                 atomically: true,
                 encoding: NSUTF8StringEncoding,
                 error: nil)
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                completion?()
-            }
         }
     }
     
