@@ -11,6 +11,7 @@ extension JSEngine {
     convenience init(remoteSourceFile: JSRemoteSourceFile) {
         self.init()
         remoteSourceFile.delegate = self
+        remoteSourceFile.updateContent()
     }
 }
 
