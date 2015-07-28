@@ -50,8 +50,8 @@ class JSEngineTests: XCTestCase {
         
         let message = "hello world"
         engine.errorHandler = {
-            XCTAssertNotNil($0 as! String, "Error message is not string")
-            XCTAssertEqual($0 as! String, message, "Error message was wrong")
+            XCTAssertNotNil($0, "Error message is nil")
+            XCTAssertEqual($0.userInfo?["error"] as! String, message, "Error message was wrong")
             expectation.fulfill()
         }
         

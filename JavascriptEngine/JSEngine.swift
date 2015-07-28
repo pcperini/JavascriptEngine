@@ -33,6 +33,14 @@ class JSEngine: NSObject {
             if self.handlerForKey("httpRequest") == nil {
                 self.setHandlerForKey("httpRequest", handler: self.httpRequestHandler)
             }
+            
+            if self.handlerForKey("error") == nil {
+                self.setHandlerForKey("error") { (errObj: AnyObject!) in
+                    NSException(name: "JSEngineJavascriptException",
+                        reason: "JSEngine threw a Javascript exception",
+                        userInfo: ["error": errObj]).raise()
+                }
+            }
         }
     }
     
@@ -43,9 +51,17 @@ class JSEngine: NSObject {
         set { self.setHandlerForKey("debug", handler: newValue) }
     }
     
-    var errorHandler: ((AnyObject!) -> Void)? {
-        get { return self.handlerForKey("error") }
-        set { self.setHandlerForKey("error", handler: newValue) }
+    var errorHandler: ((NSError!) -> Void) {
+        get {
+            return self.handlerForKey("error") as ((NSError!) -> Void)!
+        }
+        
+        set {
+            self.setHandlerForKey("error") { (errObject: AnyObject!) in
+                let err = NSError(domain: __FILE__, code: -1, userInfo: ["error": errObject])
+                newValue(err)
+            }
+        }
     }
     
     private var loadHandler: (() -> Void)? {
@@ -95,11 +111,12 @@ class JSEngine: NSObject {
     
     // MARK: Mutators
     func setHandlerForKey(key: String, handler: ((AnyObject!) -> Void)?) {
+        self.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
+        
         if let _handler = handler {
             self.webView?.configuration.userContentController.addScriptMessageHandler(self, name: key)
             self.messageHandlers[key] = _handler
         } else {
-            self.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
             self.messageHandlers.removeValueForKey(key)
         }
     }
@@ -150,10 +167,10 @@ class JSEngine: NSObject {
             encoding: NSUTF8StringEncoding)
         
         if argsString == nil {
-            self.errorHandler?("Cannot parse args \(args)")
+            self.handlerForKey("error")?("Cannot parse args \(args)")
             return
         }
-        
+
         let call = "try {" +
             "\(function).apply(\(thisArg), \(argsString!));" +
         "} catch (err) {" +
