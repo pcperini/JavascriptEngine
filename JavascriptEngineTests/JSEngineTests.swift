@@ -118,4 +118,16 @@ class JSEngineTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
+    
+    func testReloadSource() {
+        let expectation = self.expectationWithDescription("load handler was called")
+        let engine = JSEngine()
+        
+        engine.load {
+            expectation.fulfill()
+        }
+        
+        engine.setSourceString("")
+        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
+    }
 }

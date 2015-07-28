@@ -38,5 +38,4 @@ class JSEngine_RemoteSourceFileTests: XCTestCase {
 
         self.waitForExpectationsWithTimeout(JSEngine_RemoteSourceFileTests.defaultTimeout, handler: nil)
     }
-
 }
