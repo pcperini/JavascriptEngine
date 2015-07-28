@@ -19,6 +19,7 @@
 		73A03F4D1B55D3910091115C /* JSEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A03F4C1B55D3910091115C /* JSEngineTests.swift */; };
 		73A03F571B55D3AB0091115C /* JSEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A03F561B55D3AB0091115C /* JSEngine.swift */; };
 		73A03F681B5822190091115C /* JSEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A03F561B55D3AB0091115C /* JSEngine.swift */; };
+		73B3A4631B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B3A4621B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift */; };
 		73E6D19E1B5C47840079D5D6 /* JSRemoteSourceFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */; };
 		73E6D1A01B5C4CF90079D5D6 /* JavascriptEngine.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 73E6D19F1B5C4CF90079D5D6 /* JavascriptEngine.podspec */; };
 		73E6D1A41B5C4D610079D5D6 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 73E6D1A31B5C4D610079D5D6 /* Podfile */; };
@@ -51,6 +52,7 @@
 		73A03F4B1B55D3910091115C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73A03F4C1B55D3910091115C /* JSEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSEngineTests.swift; sourceTree = "<group>"; };
 		73A03F561B55D3AB0091115C /* JSEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSEngine.swift; sourceTree = "<group>"; };
+		73B3A4621B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSEngine+RemoteSourceFileTests.swift"; sourceTree = "<group>"; };
 		73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSRemoteSourceFile.swift; sourceTree = "<group>"; };
 		73E6D19F1B5C4CF90079D5D6 /* JavascriptEngine.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = JavascriptEngine.podspec; sourceTree = "<group>"; };
 		73E6D1A31B5C4D610079D5D6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -138,6 +140,7 @@
 			children = (
 				73A03F4C1B55D3910091115C /* JSEngineTests.swift */,
 				73536A4C1B5DC12000D2B345 /* JSRemoteSourceFileTests.swift */,
+				73B3A4621B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift */,
 				73A03F4A1B55D3910091115C /* Supporting Files */,
 			);
 			path = JavascriptEngineTests;
@@ -375,6 +378,7 @@
 				73583D691B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift in Sources */,
 				73A03F681B5822190091115C /* JSEngine.swift in Sources */,
 				73536A4E1B5DC1D100D2B345 /* JSRemoteSourceFile.swift in Sources */,
+				73B3A4631B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift in Sources */,
 				73536A4D1B5DC12000D2B345 /* JSRemoteSourceFileTests.swift in Sources */,
 				73A03F4D1B55D3910091115C /* JSEngineTests.swift in Sources */,
 			);

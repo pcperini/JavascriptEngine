@@ -16,7 +16,26 @@ class JSEngine: NSObject {
     private static let mainFunc = "window.onload = function () {engine.load.postMessage(null);}"
     
     // MARK: Properties
-    private var webView: WKWebView?
+    private var webView: WKWebView? {
+        willSet {
+            // Remove old reference to self for scriptMessageHandler
+            for (key, _) in self.messageHandlers {
+                self.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
+            }
+        }
+        
+        didSet {
+            // Migrate message handlers            
+            for (key, value) in self.messageHandlers {
+                self.setHandlerForKey(key, handler: value)
+            }
+            
+            if self.handlerForKey("httpRequest") == nil {
+                self.setHandlerForKey("httpRequest", handler: self.httpRequestHandler)
+            }
+        }
+    }
+    
     private var messageHandlers: [String: (AnyObject!) -> Void] = [:]
     
     var debugHandler: ((AnyObject!) -> Void)? {
@@ -29,9 +48,29 @@ class JSEngine: NSObject {
         set { self.setHandlerForKey("error", handler: newValue) }
     }
     
+    private var loadHandler: (() -> Void)? {
+        get {
+            if let handler = self.handlerForKey("load") {
+                return { handler(nil) }
+            } else {
+                return nil
+            }
+        }
+        
+        set {
+            if let handler = newValue {
+                self.setHandlerForKey("load") { (_: AnyObject!) in
+                    handler()
+                }
+            } else {
+                self.setHandlerForKey("load", handler: nil)
+            }
+        }
+    }
+    
     private var source: String? {
         return self.webView?.configuration.userContentController.userScripts.reduce("") {
-            "\($0)\n\($1.source!)"
+            "\($0!)\n\($1.source!)"
         }
     }
     
@@ -56,11 +95,17 @@ class JSEngine: NSObject {
     
     // MARK: Mutators
     func setHandlerForKey(key: String, handler: ((AnyObject!) -> Void)?) {
-        self.webView?.configuration.userContentController.addScriptMessageHandler(self, name: key)
-        self.messageHandlers[key] = handler
+        if let _handler = handler {
+            self.webView?.configuration.userContentController.addScriptMessageHandler(self, name: key)
+            self.messageHandlers[key] = _handler
+        } else {
+            self.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
+            self.messageHandlers.removeValueForKey(key)
+        }
     }
     
     internal func setSourceString(sourceString: String) {
+        // Construct new content controller
         let contentController = WKUserContentController()
         
         contentController.addUserScript(WKUserScript(source: JSEngine.globalVars,
@@ -82,13 +127,20 @@ class JSEngine: NSObject {
             configuration: config)
         (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView!)
         
-        self.setHandlerForKey("httpRequest", handler: self.httpRequestHandler)
+        if self.loadHandler != nil { // Race condition, loadHandler has already been set.
+            self.load(handler: self.loadHandler)
+        }
     }
     
     // MARK: Load Handlers
     func load(handler: (() -> Void)? = nil) {
-        self.setHandlerForKey("load", handler: { (_: AnyObject!) in handler?() })
-        self.webView?.loadHTMLString("<html></html>", baseURL: nil)
+        
+        self.loadHandler = nil
+        self.loadHandler = handler
+        
+        if self.source != nil { // Race condition , source has already been set.
+            self.webView?.loadHTMLString("<html></html>", baseURL: nil)
+        }
     }
     
     func callFunction(function: String, thisArg: String = "null", args: [AnyObject]) {
