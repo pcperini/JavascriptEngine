@@ -8,5 +8,5 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => 'https://github.com/pcperini/JavascriptEngine.git', :tag => 'v0.0.3' }
   spec.source_files = 'JavascriptEngine/JS*.swift'
   spec.platform     = :ios, "8.0"
-  spec.dependency   = 'AFNetworking'
+  spec.dependency     'AFNetworking'
 end
