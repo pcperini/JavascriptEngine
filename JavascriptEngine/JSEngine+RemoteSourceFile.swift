@@ -7,7 +7,7 @@
 //
 
 // MARK: Remote Source File Support
-extension JSEngine {
+public extension JSEngine {
     convenience init(remoteSourceFile: JSRemoteSourceFile) {
         self.init()
         remoteSourceFile.delegate = self
@@ -16,7 +16,7 @@ extension JSEngine {
 }
 
 extension JSEngine: JSRemoteSourceFileDelegate {
-    func remoteSoureFile(file: JSRemoteSourceFile, didUpdateContent content: String?) {
+    public func remoteSoureFile(file: JSRemoteSourceFile, didUpdateContent content: String?) {
         if let content = content {
             self.setSourceString(content)
         }

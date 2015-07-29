@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import AFNetworking
 
-class JSEngine: NSObject {
+public class JSEngine: NSObject {
     // MARK: Constants
     private static let globalVars = "var engine = window.webkit.messageHandlers;"
     private static let mainFunc = "window.onload = function () {engine.load.postMessage(null);}"
@@ -182,7 +182,7 @@ class JSEngine: NSObject {
 }
 
 extension JSEngine: WKScriptMessageHandler {
-    @objc func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+    @objc public func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
         dispatch_async(dispatch_get_main_queue()) {
             self.handlerForKey(message.name)?(message.body)
         }
@@ -190,7 +190,7 @@ extension JSEngine: WKScriptMessageHandler {
 }
 
 // MARK: Default Handlers
-extension JSEngine {
+private extension JSEngine {
     private func httpRequestHandler(requestObject: AnyObject!) {
         if let request = requestObject as? NSDictionary {
             let responseHandler = requestObject["responseHandler"] as! String

@@ -9,12 +9,12 @@
 import Foundation
 import AFNetworking
 
-protocol JSRemoteSourceFileDelegate {
+public protocol JSRemoteSourceFileDelegate {
     // MARK: Optionals
     func remoteSoureFile(file: JSRemoteSourceFile, didUpdateContent content: String?)
 }
 
-class JSRemoteSourceFile: NSObject {
+public class JSRemoteSourceFile: NSObject {
     // MARK: Properties
     var delegate: JSRemoteSourceFileDelegate?
     
@@ -45,13 +45,13 @@ class JSRemoteSourceFile: NSObject {
     }()
     
     // MARK: Class Initializers
-    override class func initialize() {
+    public override class func initialize() {
         super.initialize()
         AFNetworkReachabilityManager.sharedManager().startMonitoring()
     }
     
     // MARK: Initializers
-    required init(remoteURL: NSURL) {
+    public required init(remoteURL: NSURL) {
         self.fileName = remoteURL.lastPathComponent!
         self.remoteURL = remoteURL
         
