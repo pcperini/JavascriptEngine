@@ -21,7 +21,7 @@
 		73A03F681B5822190091115C /* JSEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A03F561B55D3AB0091115C /* JSEngine.swift */; };
 		73B3A4631B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B3A4621B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift */; };
 		73E6D19E1B5C47840079D5D6 /* JSRemoteSourceFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */; };
-		73E6D1A01B5C4CF90079D5D6 /* JavascriptEngine.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 73E6D19F1B5C4CF90079D5D6 /* JavascriptEngine.podspec */; };
+		73E6D1A01B5C4CF90079D5D6 /* JSEngine.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 73E6D19F1B5C4CF90079D5D6 /* JSEngine.podspec */; };
 		73E6D1A41B5C4D610079D5D6 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 73E6D1A31B5C4D610079D5D6 /* Podfile */; };
 		857FC5FF1A87DBA9B9DE0E8E /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E14ECDA771EEA20E41EB1DC2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		AFCD82630ABB69EE2E7A6D4D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E14ECDA771EEA20E41EB1DC2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -54,7 +54,7 @@
 		73A03F561B55D3AB0091115C /* JSEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSEngine.swift; sourceTree = "<group>"; };
 		73B3A4621B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSEngine+RemoteSourceFileTests.swift"; sourceTree = "<group>"; };
 		73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSRemoteSourceFile.swift; sourceTree = "<group>"; };
-		73E6D19F1B5C4CF90079D5D6 /* JavascriptEngine.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = JavascriptEngine.podspec; sourceTree = "<group>"; };
+		73E6D19F1B5C4CF90079D5D6 /* JSEngine.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = JSEngine.podspec; sourceTree = "<group>"; };
 		73E6D1A31B5C4D610079D5D6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E14ECDA771EEA20E41EB1DC2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7DF2059AF1A07279088F720 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -92,7 +92,7 @@
 		73A03F281B55D3910091115C = {
 			isa = PBXGroup;
 			children = (
-				73E6D19F1B5C4CF90079D5D6 /* JavascriptEngine.podspec */,
+				73E6D19F1B5C4CF90079D5D6 /* JSEngine.podspec */,
 				73E6D1A31B5C4D610079D5D6 /* Podfile */,
 				73A03F331B55D3910091115C /* JavascriptEngine */,
 				73A03F491B55D3910091115C /* JavascriptEngineTests */,
@@ -250,7 +250,7 @@
 			files = (
 				73E6D1A41B5C4D610079D5D6 /* Podfile in Resources */,
 				73A03F3C1B55D3910091115C /* Main.storyboard in Resources */,
-				73E6D1A01B5C4CF90079D5D6 /* JavascriptEngine.podspec in Resources */,
+				73E6D1A01B5C4CF90079D5D6 /* JSEngine.podspec in Resources */,
 				73A03F411B55D3910091115C /* LaunchScreen.xib in Resources */,
 				73A03F3E1B55D3910091115C /* Images.xcassets in Resources */,
 			);
