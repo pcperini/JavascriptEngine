@@ -65,7 +65,7 @@ public class JSEngine: NSObject {
         }
     }
     
-    private(set) var loaded: Bool = false
+    private(set) public var loaded: Bool = false
     private var loadHandler: (() -> Void)? {
         get {
             if let handler = self.handlerForKey("load") {
