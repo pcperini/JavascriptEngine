@@ -129,7 +129,7 @@ public class JSEngine: NSObject {
     }
     
     internal func setSourceString(sourceString: String) {
-        if self.originalSource == nil {
+        if self.source == nil {
             self.originalSource = sourceString
         }
         
@@ -194,7 +194,7 @@ public class JSEngine: NSObject {
 
 extension JSEngine: NSCopying {
     public func copyWithZone(zone: NSZone) -> AnyObject {
-        if let source = self.source {
+        if let source = self.originalSource {
             let engine = JSEngine(sourceString: source)
             for (key, handler) in self.messageHandlers {
                 engine.setHandlerForKey(key, handler: handler)
