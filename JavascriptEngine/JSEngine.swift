@@ -200,6 +200,12 @@ extension JSEngine: NSCopying {
                 engine.setHandlerForKey(key, handler: handler)
             }
             
+            dispatch_async(dispatch_get_main_queue()) {
+                if self.loaded {
+                    engine.load(handler: self.loadHandler)
+                }
+            }
+            
             return engine
         } else {
             return JSEngine()
