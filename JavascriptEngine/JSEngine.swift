@@ -294,12 +294,14 @@ private extension JSEngine {
                 
                 self.callFunction(responseHandler, args: [
                     respString,
-                    userInfo
+                    userInfo,
+                    NSNull()
                 ])
             }, failure: { (op: AFHTTPRequestOperation!, error: NSError!) in
                 self.callFunction(responseHandler, args: [
                     "",
-                    userInfo
+                    userInfo,
+                    error.localizedDescription
                 ])
             })
         }
