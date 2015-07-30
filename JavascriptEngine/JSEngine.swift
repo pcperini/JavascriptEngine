@@ -129,7 +129,7 @@ public class JSEngine: NSObject {
     }
     
     internal func setSourceString(sourceString: String) {
-        if self.source == nil {
+        if self.originalSource == nil {
             self.originalSource = sourceString
         }
         
