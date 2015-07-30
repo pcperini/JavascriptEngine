@@ -133,25 +133,4 @@ class JSEngineTests: XCTestCase {
         engine.setSourceString("")
         self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
-    
-    func testCopyDebug() {
-        let expectation = self.expectationWithDescription("debug handler was called")
-        let engine = JSEngine(sourceString: "function debugTest(message) {" +
-            "engine.debug.postMessage(message);" +
-        "}")
-        
-        let message = "hello world"
-        engine.debugHandler = {
-            XCTAssertNotNil($0 as! String, "Debug message is not string")
-            XCTAssertEqual($0 as! String, message, "Debug message was wrong")
-            expectation.fulfill()
-        }
-        
-        let engineCopy = engine.copy() as! JSEngine
-        engineCopy.load {
-            engineCopy.callFunction("debugTest", args: [message])
-        }
-        
-        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
-    }
 }

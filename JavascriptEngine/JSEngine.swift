@@ -191,21 +191,6 @@ public class JSEngine: NSObject {
     }
 }
 
-extension JSEngine: NSCopying {
-    public func copyWithZone(zone: NSZone) -> AnyObject {
-        if let source = self.originalSource {
-            let engine = JSEngine(sourceString: source)
-            for (key, handler) in self.messageHandlers {
-                engine.setHandlerForKey(key, handler: handler)
-            }
-            
-            return engine
-        } else {
-            return JSEngine()
-        }
-    }
-}
-
 extension JSEngine: WKScriptMessageHandler {
     @objc public func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
         dispatch_async(dispatch_get_main_queue()) {
