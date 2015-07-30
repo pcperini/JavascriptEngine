@@ -65,18 +65,23 @@ public class JSEngine: NSObject {
         }
     }
     
+    private(set) var loaded: Bool = false
     private var loadHandler: (() -> Void)? {
         get {
             if let handler = self.handlerForKey("load") {
-                return { handler(nil) }
+                return { [unowned self] in
+                    handler(nil)
+                }
             } else {
                 return nil
             }
         }
         
         set {
+            self.loaded = false
             if let handler = newValue {
                 self.setHandlerForKey("load") { (_: AnyObject!) in
+                    self.loaded = true
                     handler()
                 }
             } else {

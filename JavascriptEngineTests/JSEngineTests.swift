@@ -16,9 +16,12 @@ class JSEngineTests: XCTestCase {
         let expectation = self.expectationWithDescription("load handler was called")
         let engine = JSEngine(sourceString: "")
         
+        XCTAssertFalse(engine.loaded, "Engine loaded flag falsely set")
         engine.load {
+            XCTAssertTrue(engine.loaded, "Engine was not loaded")
             expectation.fulfill()
         }
+        
         self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
     
