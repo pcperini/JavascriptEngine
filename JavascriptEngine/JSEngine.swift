@@ -35,10 +35,11 @@ public class JSEngine: NSObject {
             }
             
             if self.handlerForKey("error") == nil {
-                self.setHandlerForKey("error") { (errObj: AnyObject!) in
+                self.setHandlerForKey("error") { [unowned self] (errObj: AnyObject!) in
+                    println(self.source)
                     NSException(name: "JSEngineJavascriptException",
                         reason: "JSEngine threw a Javascript exception",
-                        userInfo: ["error": errObj]).raise()
+                        userInfo: ["error": errObj, "source": self.source ?? NSNull()]).raise()
                 }
             }
         }
@@ -84,6 +85,7 @@ public class JSEngine: NSObject {
         }
     }
     
+    private var originalSource: String?
     private var source: String? {
         return self.webView?.configuration.userContentController.userScripts.reduce("") {
             "\($0!)\n\($1.source!)"
@@ -122,6 +124,10 @@ public class JSEngine: NSObject {
     }
     
     internal func setSourceString(sourceString: String) {
+        if self.source == nil {
+            self.originalSource = sourceString
+        }
+        
         // Construct new content controller
         let contentController = WKUserContentController()
         
@@ -178,6 +184,21 @@ public class JSEngine: NSObject {
         "}"
         
         self.webView?.evaluateJavaScript(call, completionHandler: nil)
+    }
+}
+
+extension JSEngine: NSCopying {
+    public func copyWithZone(zone: NSZone) -> AnyObject {
+        if let source = self.source {
+            let engine = JSEngine(sourceString: source)
+            for (key, handler) in self.messageHandlers {
+                engine.setHandlerForKey(key, handler: handler)
+            }
+            
+            return engine
+        } else {
+            return JSEngine()
+        }
     }
 }
 
