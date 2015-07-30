@@ -46,12 +46,12 @@ public class JSEngine: NSObject {
     
     private var messageHandlers: [String: (AnyObject!) -> Void] = [:]
     
-    var debugHandler: ((AnyObject!) -> Void)? {
+    public var debugHandler: ((AnyObject!) -> Void)? {
         get { return self.handlerForKey("debug") }
         set { self.setHandlerForKey("debug", handler: newValue) }
     }
     
-    var errorHandler: ((NSError!) -> Void) {
+    public var errorHandler: ((NSError!) -> Void) {
         get {
             return self.handlerForKey("error") as ((NSError!) -> Void)!
         }
@@ -91,11 +91,11 @@ public class JSEngine: NSObject {
     }
     
     // MARK: Initializers
-    override init() {
+    public override init() {
         super.init()
     }
     
-    convenience init(sourceString: String) {
+    public convenience init(sourceString: String) {
         self.init()
         self.setSourceString(sourceString)
     }
@@ -105,12 +105,12 @@ public class JSEngine: NSObject {
     }
     
     // MARK: Accessors
-    func handlerForKey(key: String) -> ((AnyObject!) -> Void)? {
+    public func handlerForKey(key: String) -> ((AnyObject!) -> Void)? {
         return self.messageHandlers[key]
     }
     
     // MARK: Mutators
-    func setHandlerForKey(key: String, handler: ((AnyObject!) -> Void)?) {
+    public func setHandlerForKey(key: String, handler: ((AnyObject!) -> Void)?) {
         self.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
         
         if let _handler = handler {
@@ -150,7 +150,7 @@ public class JSEngine: NSObject {
     }
     
     // MARK: Load Handlers
-    func load(handler: (() -> Void)? = nil) {
+    public func load(handler: (() -> Void)? = nil) {
         
         self.loadHandler = nil
         self.loadHandler = handler
@@ -160,7 +160,7 @@ public class JSEngine: NSObject {
         }
     }
     
-    func callFunction(function: String, thisArg: String = "null", args: [AnyObject]) {
+    public func callFunction(function: String, thisArg: String = "null", args: [AnyObject]) {
         let argsString = NSString(data: NSJSONSerialization.dataWithJSONObject(args,
             options: nil,
             error: nil) ?? NSData(),

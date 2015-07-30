@@ -8,7 +8,7 @@
 
 // MARK: Remote Source File Support
 public extension JSEngine {
-    convenience init(remoteSourceFile: JSRemoteSourceFile) {
+    public convenience init(remoteSourceFile: JSRemoteSourceFile) {
         self.init()
         remoteSourceFile.delegate = self
         remoteSourceFile.updateContent()

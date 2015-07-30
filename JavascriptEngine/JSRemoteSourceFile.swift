@@ -16,7 +16,7 @@ public protocol JSRemoteSourceFileDelegate {
 
 public class JSRemoteSourceFile: NSObject {
     // MARK: Properties
-    var delegate: JSRemoteSourceFileDelegate?
+    public var delegate: JSRemoteSourceFileDelegate?
     
     private let fileName: String
     private let localCachePath: String
@@ -34,7 +34,7 @@ public class JSRemoteSourceFile: NSObject {
         }
     }
     
-    var remoteRetryDelay: NSTimeInterval = 1.0
+    public var remoteRetryDelay: NSTimeInterval = 1.0
     private let remoteURL: NSURL
     private var updatingFromRemote: Bool = false
     private let networkManager: AFHTTPRequestOperationManager = {
@@ -73,7 +73,7 @@ public class JSRemoteSourceFile: NSObject {
     }
     
     // MARK: Mutators
-    func updateContent(retryDelay: NSTimeInterval = 0.0) {
+    public func updateContent(retryDelay: NSTimeInterval = 0.0) {
         // Wait for delay
         if retryDelay > 0.0 {
             let afterTime = Int64(NSTimeInterval(NSEC_PER_SEC) * retryDelay)
