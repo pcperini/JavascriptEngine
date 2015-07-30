@@ -220,7 +220,6 @@ private extension JSEngine {
     private func httpRequestHandler(requestObject: AnyObject!) {
         if let request = requestObject as? NSDictionary {
             let responseHandler = requestObject["responseHandler"] as! String
-            let responseHandlerObject = (requestObject["responseHandlerObject"] as? String) ?? "null"
             
             // Get URL
             let baseURL = NSURL(string: (requestObject["baseURL"] as? String) ?? "")
@@ -293,12 +292,12 @@ private extension JSEngine {
                     respString = ""
                 }
                 
-                self.callFunction(responseHandler, thisArg: responseHandlerObject, args: [
+                self.callFunction(responseHandler, args: [
                     respString,
                     userInfo
                 ])
             }, failure: { (op: AFHTTPRequestOperation!, error: NSError!) in
-                self.callFunction(responseHandler, thisArg: responseHandlerObject, args: [
+                self.callFunction(responseHandler, args: [
                     "",
                     userInfo
                 ])
