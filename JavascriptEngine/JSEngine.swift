@@ -36,7 +36,6 @@ public class JSEngine: NSObject {
             
             if self.handlerForKey("error") == nil {
                 self.setHandlerForKey("error") { [unowned self] (errObj: AnyObject!) in
-                    println(self.source)
                     NSException(name: "JSEngineJavascriptException",
                         reason: "JSEngine threw a Javascript exception",
                         userInfo: ["error": errObj, "source": self.source ?? NSNull()]).raise()
