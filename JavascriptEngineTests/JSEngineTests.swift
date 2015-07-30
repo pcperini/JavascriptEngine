@@ -154,22 +154,4 @@ class JSEngineTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
-    
-    func testCopyReload() {
-        let expectation = self.expectationWithDescription("load handler was called")
-        let engine = JSEngine(sourceString: "")
-        
-        var loadCount = 0
-        engine.load {
-            loadCount++
-            
-            if loadCount == 2 {
-                expectation.fulfill()
-            } else { // Should retrigger load
-                let engineCopy = engine.copy() as! JSEngine
-            }
-        }
-        
-        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
-    }
 }
