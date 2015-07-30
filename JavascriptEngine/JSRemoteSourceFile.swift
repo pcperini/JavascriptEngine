@@ -22,7 +22,7 @@ public class JSRemoteSourceFile: NSObject {
     private let localCachePath: String
     private var updatingFromLocal: Bool = false
     
-    private(set) var content: String? {
+    private(set) public var content: String? {
         didSet {
             if oldValue != self.content {
                 self.delegate?.remoteSoureFile(self, didUpdateContent: self.content)
