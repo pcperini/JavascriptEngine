@@ -91,7 +91,7 @@ public class JSEngine: NSObject {
     }
     
     private var originalSource: String?
-    var source: String? {
+    public var source: String? {
         get {
             return self.webView?.configuration.userContentController.userScripts.reduce("") {
                 "\($0!)\n\($1.source!)"
