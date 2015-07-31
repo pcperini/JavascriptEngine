@@ -8,9 +8,9 @@
 
 import WebKit
 
-extension WKWebView {
+public extension WKWebView {
     // MARK: Engine Injection
-    func injectEngine(engine: JSEngine) {
+    public func injectEngine(engine: JSEngine) {
         if let source = engine.source {
             self.configuration.userContentController.addUserScript(WKUserScript(source: source,
                 injectionTime: WKUserScriptInjectionTime.AtDocumentEnd,
