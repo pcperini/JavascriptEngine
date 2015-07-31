@@ -16,6 +16,7 @@ public class JSEngine: NSObject {
     private static let mainFunc = "window.onload = function () {engine.load.postMessage(null);}"
     
     // MARK: Properties
+    private(set) public var lastHTTPRequest: AFHTTPRequestOperation?
     private var webView: WKWebView? {
         willSet {
             // Remove old reference to self for scriptMessageHandler
@@ -269,6 +270,8 @@ private extension JSEngine {
             // Make call
             let userInfo = requestObject["userInfo"] as? NSDictionary ?? NSDictionary()
             method(URLString: path, parameters: allParams, success: { (op: AFHTTPRequestOperation!, resp: AnyObject!) in
+                self.lastHTTPRequest = op
+                
                 let respString: String
                 if let respData = resp as? NSData {
                     respString = (NSString(data: respData, encoding: NSUTF8StringEncoding) as? String) ?? ""
@@ -282,6 +285,8 @@ private extension JSEngine {
                     NSNull()
                 ])
             }, failure: { (op: AFHTTPRequestOperation!, error: NSError!) in
+                self.lastHTTPRequest = op
+                
                 self.callFunction(responseHandler, args: [
                     "",
                     userInfo,
