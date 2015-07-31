@@ -55,7 +55,7 @@ public class JSRemoteSourceFile: NSObject {
         self.fileName = remoteURL.lastPathComponent!
         self.remoteURL = remoteURL
         
-        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory,
+        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory,
             NSSearchPathDomainMask.UserDomainMask,
             true)
         self.localCachePath = paths.first!.stringByAppendingPathComponent(self.fileName)

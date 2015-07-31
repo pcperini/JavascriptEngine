@@ -152,6 +152,25 @@ public class JSEngine: NSObject {
         return self.messageHandlers[key]
     }
     
+    public func signatureForFunction(function: String, thisArg: String = "null", args: [AnyObject] = []) -> String? {
+        let argsString = NSString(data: NSJSONSerialization.dataWithJSONObject(args,
+            options: nil,
+            error: nil) ?? NSData(),
+            encoding: NSUTF8StringEncoding)
+        
+        if argsString == nil {
+            return nil
+        }
+        
+        let call = "try {" +
+            "\(function).apply(\(thisArg), \(argsString!));" +
+            "} catch (err) {" +
+            "engine.error.postMessage(err + '');" +
+        "}"
+        
+        return call
+    }
+    
     // MARK: Mutators
     public func setHandlerForKey(key: String, handler: ((AnyObject!) -> Void)?) {
         self.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
@@ -176,23 +195,11 @@ public class JSEngine: NSObject {
     }
     
     public func callFunction(function: String, thisArg: String = "null", args: [AnyObject] = []) {
-        let argsString = NSString(data: NSJSONSerialization.dataWithJSONObject(args,
-            options: nil,
-            error: nil) ?? NSData(),
-            encoding: NSUTF8StringEncoding)
-        
-        if argsString == nil {
+        if let call = self.signatureForFunction(function, thisArg: thisArg, args: args) {
+            self.webView?.evaluateJavaScript(call, completionHandler: nil)
+        } else {
             self.handlerForKey("error")?("Cannot parse args \(args)")
-            return
         }
-
-        let call = "try {" +
-            "\(function).apply(\(thisArg), \(argsString!));" +
-        "} catch (err) {" +
-            "engine.error.postMessage(err + '');" +
-        "}"
-        
-        self.webView?.evaluateJavaScript(call, completionHandler: nil)
     }
 }
 
