@@ -23,6 +23,9 @@
 		73E6D19E1B5C47840079D5D6 /* JSRemoteSourceFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */; };
 		73E6D1A01B5C4CF90079D5D6 /* JSEngine.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 73E6D19F1B5C4CF90079D5D6 /* JSEngine.podspec */; };
 		73E6D1A41B5C4D610079D5D6 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 73E6D1A31B5C4D610079D5D6 /* Podfile */; };
+		73FF3C3F1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FF3C3E1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift */; };
+		73FF3C401B6BCA73006816AE /* WKWebView+JSEngineInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FF3C3E1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift */; };
+		73FF3C431B6BCD2A006816AE /* WKWebView+JSEngineInjectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FF3C411B6BCD2A006816AE /* WKWebView+JSEngineInjectionTests.swift */; };
 		857FC5FF1A87DBA9B9DE0E8E /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E14ECDA771EEA20E41EB1DC2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		AFCD82630ABB69EE2E7A6D4D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E14ECDA771EEA20E41EB1DC2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -56,6 +59,8 @@
 		73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSRemoteSourceFile.swift; sourceTree = "<group>"; };
 		73E6D19F1B5C4CF90079D5D6 /* JSEngine.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = JSEngine.podspec; sourceTree = "<group>"; };
 		73E6D1A31B5C4D610079D5D6 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		73FF3C3E1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WKWebView+JSEngineInjection.swift"; sourceTree = "<group>"; };
+		73FF3C411B6BCD2A006816AE /* WKWebView+JSEngineInjectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WKWebView+JSEngineInjectionTests.swift"; sourceTree = "<group>"; };
 		E14ECDA771EEA20E41EB1DC2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7DF2059AF1A07279088F720 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -123,6 +128,7 @@
 				73A03F561B55D3AB0091115C /* JSEngine.swift */,
 				73E6D19D1B5C47840079D5D6 /* JSRemoteSourceFile.swift */,
 				73583D671B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift */,
+				73FF3C3E1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift */,
 			);
 			path = JavascriptEngine;
 			sourceTree = "<group>";
@@ -141,6 +147,7 @@
 				73A03F4C1B55D3910091115C /* JSEngineTests.swift */,
 				73536A4C1B5DC12000D2B345 /* JSRemoteSourceFileTests.swift */,
 				73B3A4621B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift */,
+				73FF3C411B6BCD2A006816AE /* WKWebView+JSEngineInjectionTests.swift */,
 				73A03F4A1B55D3910091115C /* Supporting Files */,
 			);
 			path = JavascriptEngineTests;
@@ -365,6 +372,7 @@
 			files = (
 				73583D681B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift in Sources */,
 				73A03F391B55D3910091115C /* ViewController.swift in Sources */,
+				73FF3C3F1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift in Sources */,
 				73E6D19E1B5C47840079D5D6 /* JSRemoteSourceFile.swift in Sources */,
 				73A03F371B55D3910091115C /* AppDelegate.swift in Sources */,
 				73A03F571B55D3AB0091115C /* JSEngine.swift in Sources */,
@@ -375,9 +383,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73FF3C431B6BCD2A006816AE /* WKWebView+JSEngineInjectionTests.swift in Sources */,
 				73583D691B604C06001E45B1 /* JSEngine+RemoteSourceFile.swift in Sources */,
 				73A03F681B5822190091115C /* JSEngine.swift in Sources */,
 				73536A4E1B5DC1D100D2B345 /* JSRemoteSourceFile.swift in Sources */,
+				73FF3C401B6BCA73006816AE /* WKWebView+JSEngineInjection.swift in Sources */,
 				73B3A4631B6827DA0065256D /* JSEngine+RemoteSourceFileTests.swift in Sources */,
 				73536A4D1B5DC12000D2B345 /* JSRemoteSourceFileTests.swift in Sources */,
 				73A03F4D1B55D3910091115C /* JSEngineTests.swift in Sources */,

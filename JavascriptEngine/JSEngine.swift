@@ -13,10 +13,11 @@ import AFNetworking
 public class JSEngine: NSObject {
     // MARK: Constants
     private static let globalVars = "var engine = window.webkit.messageHandlers;"
-    private static let mainFunc = "window.onload = function () {engine.load.postMessage(null);}"
+    private static let mainFunc = "window.onload = function () {engine.load.postMessage(null);};"
     
     // MARK: Properties
     private(set) public var lastHTTPRequest: AFHTTPRequestOperation?
+
     private var webView: WKWebView? {
         willSet {
             // Remove old reference to self for scriptMessageHandler
@@ -45,8 +46,7 @@ public class JSEngine: NSObject {
         }
     }
     
-    private var messageHandlers: [String: (AnyObject!) -> Void] = [:]
-    
+    private(set) internal var messageHandlers: [String: (AnyObject!) -> Void] = [:]
     public var debugHandler: ((AnyObject!) -> Void)? {
         get { return self.handlerForKey("debug") }
         set { self.setHandlerForKey("debug", handler: newValue) }
@@ -91,9 +91,45 @@ public class JSEngine: NSObject {
     }
     
     private var originalSource: String?
-    private var source: String? {
-        return self.webView?.configuration.userContentController.userScripts.reduce("") {
-            "\($0!)\n\($1.source!)"
+    var source: String? {
+        get {
+            return self.webView?.configuration.userContentController.userScripts.reduce("") {
+                "\($0!)\n\($1.source!)"
+            }
+        }
+        
+        set {
+            if let sourceString = newValue {
+                if self.source == nil {
+                    self.originalSource = sourceString
+                }
+                
+                // Construct new content controller
+                let contentController = WKUserContentController()
+                
+                contentController.addUserScript(WKUserScript(source: JSEngine.globalVars,
+                    injectionTime: WKUserScriptInjectionTime.AtDocumentStart,
+                    forMainFrameOnly: true))
+                
+                contentController.addUserScript(WKUserScript(source: sourceString,
+                    injectionTime: WKUserScriptInjectionTime.AtDocumentEnd,
+                    forMainFrameOnly: true))
+                
+                contentController.addUserScript(WKUserScript(source: JSEngine.mainFunc,
+                    injectionTime: WKUserScriptInjectionTime.AtDocumentEnd,
+                    forMainFrameOnly: true))
+                
+                let config = WKWebViewConfiguration()
+                config.userContentController = contentController
+                
+                self.webView = WKWebView(frame: CGRect(),
+                    configuration: config)
+                (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView!)
+                
+                if self.loadHandler != nil { // Race condition, loadHandler has already been set.
+                    self.load(handler: self.loadHandler)
+                }
+            }
         }
     }
     
@@ -104,7 +140,7 @@ public class JSEngine: NSObject {
     
     public convenience init(sourceString: String) {
         self.init()
-        self.setSourceString(sourceString)
+        self.source = sourceString
     }
     
     deinit {
@@ -128,38 +164,6 @@ public class JSEngine: NSObject {
         }
     }
     
-    internal func setSourceString(sourceString: String) {
-        if self.source == nil {
-            self.originalSource = sourceString
-        }
-        
-        // Construct new content controller
-        let contentController = WKUserContentController()
-        
-        contentController.addUserScript(WKUserScript(source: JSEngine.globalVars,
-            injectionTime: WKUserScriptInjectionTime.AtDocumentStart,
-            forMainFrameOnly: true))
-        
-        contentController.addUserScript(WKUserScript(source: sourceString,
-            injectionTime: WKUserScriptInjectionTime.AtDocumentEnd,
-            forMainFrameOnly: true))
-        
-        contentController.addUserScript(WKUserScript(source: JSEngine.mainFunc,
-            injectionTime: WKUserScriptInjectionTime.AtDocumentEnd,
-            forMainFrameOnly: true))
-        
-        let config = WKWebViewConfiguration()
-        config.userContentController = contentController
-        
-        self.webView = WKWebView(frame: CGRect(),
-            configuration: config)
-        (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView!)
-        
-        if self.loadHandler != nil { // Race condition, loadHandler has already been set.
-            self.load(handler: self.loadHandler)
-        }
-    }
-    
     // MARK: Load Handlers
     public func load(handler: (() -> Void)? = nil) {
         
@@ -171,7 +175,7 @@ public class JSEngine: NSObject {
         }
     }
     
-    public func callFunction(function: String, thisArg: String = "null", args: [AnyObject]) {
+    public func callFunction(function: String, thisArg: String = "null", args: [AnyObject] = []) {
         let argsString = NSString(data: NSJSONSerialization.dataWithJSONObject(args,
             options: nil,
             error: nil) ?? NSData(),

@@ -130,7 +130,7 @@ class JSEngineTests: XCTestCase {
             expectation.fulfill()
         }
         
-        engine.setSourceString("")
+        engine.source = ""
         self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
 }

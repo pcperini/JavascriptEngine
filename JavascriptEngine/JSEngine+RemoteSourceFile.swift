@@ -18,7 +18,7 @@ public extension JSEngine {
 extension JSEngine: JSRemoteSourceFileDelegate {
     public func remoteSoureFile(file: JSRemoteSourceFile, didUpdateContent content: String?) {
         if let content = content {
-            self.setSourceString(content)
+            self.source = content
         }
     }
 }
