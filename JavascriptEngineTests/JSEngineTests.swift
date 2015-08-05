@@ -136,7 +136,7 @@ class JSEngineTests: XCTestCase {
     
     func testLoadTimeout() {
         let expectation = self.expectationWithDescription("load handler was called")
-        let engine = JSEngine(sourceString: "engine = null;")
+        let engine = JSEngine(sourceString: "for (i = 0; i < 999999999; i++) { }") // Is this really the best way to sleep() in js?
         
         engine.loadTimeout = 2.0
         engine.errorHandler = { (err: NSError!) in
@@ -147,6 +147,6 @@ class JSEngineTests: XCTestCase {
         }
         
         engine.load { }
-        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
+        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout * 1000, handler: nil)
     }
 }

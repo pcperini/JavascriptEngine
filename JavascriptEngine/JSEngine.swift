@@ -80,11 +80,10 @@ public class JSEngine: NSObject {
         
         set {
             self.loaded = false
-            
-            // Handle timeout
-            var timeoutDidFire = false
-            
-            if newValue != nil {
+            if let handler = newValue {
+                
+                // Handle timeout
+                var timeoutDidFire = false
                 let timeoutInterval = dispatch_time(DISPATCH_TIME_NOW, Int64(NSTimeInterval(NSEC_PER_SEC) * self.loadTimeout))
                 dispatch_after(timeoutInterval, dispatch_get_main_queue()) {
                     if !self.loaded {
@@ -92,16 +91,14 @@ public class JSEngine: NSObject {
                         self.handlerForKey("error")?("JSEngineTimeout")
                     }
                 }
-            }
-            
-            // Set handler
-            if let handler = newValue {
-                if timeoutDidFire {
-                    // Load eventually completed. Ignore it.
-                    return
-                }
                 
+                // Set handler
                 self.setHandlerForKey("load") { (_: AnyObject!) in
+                    if timeoutDidFire {
+                        // Load eventually completed. Ignore it.
+                        return
+                    }
+                    
                     self.loaded = true
                     handler()
                 }
