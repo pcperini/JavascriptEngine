@@ -133,4 +133,20 @@ class JSEngineTests: XCTestCase {
         engine.source = ""
         self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
     }
+    
+    func testLoadTimeout() {
+        let expectation = self.expectationWithDescription("load handler was called")
+        let engine = JSEngine(sourceString: "engine = null;")
+        
+        engine.loadTimeout = 2.0
+        engine.errorHandler = { (err: NSError!) in
+            XCTAssertNotNil(err, "Error not present")
+            XCTAssertEqual((err.userInfo?["error"] as? String) ?? "", "JSEngineTimeout", "Error is not JSEngineTimeout")
+            
+            expectation.fulfill()
+        }
+        
+        engine.load { }
+        self.waitForExpectationsWithTimeout(JSEngineTests.defaultTimeout, handler: nil)
+    }
 }

@@ -17,6 +17,7 @@ public class JSEngine: NSObject {
     
     // MARK: Properties
     private(set) public var lastHTTPRequest: AFHTTPRequestOperation?
+    public var loadTimeout: NSTimeInterval = 10.0
 
     private var webView: WKWebView? {
         willSet {
@@ -59,7 +60,7 @@ public class JSEngine: NSObject {
         
         set {
             self.setHandlerForKey("error") { (errObject: AnyObject!) in
-                let err = NSError(domain: __FILE__, code: -1, userInfo: ["error": errObject])
+                let err = NSError(domain: __FILE__.lastPathComponent, code: -1, userInfo: ["error": errObject])
                 newValue(err)
             }
         }
@@ -79,7 +80,25 @@ public class JSEngine: NSObject {
         
         set {
             self.loaded = false
+            let loadStartedDate = NSDate()
+            
+            if newValue != nil {
+                // Handle timeout
+                let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(NSTimeInterval(NSEC_PER_SEC) * self.loadTimeout))
+                dispatch_after(timeout, dispatch_get_main_queue()) {
+                    if !self.loaded {
+                        self.handlerForKey("error")?("JSEngineTimeout")
+                    }
+                }
+            }
+            
+            // Set handler
             if let handler = newValue {
+                // Load eventually completed. Ignore it.
+                if fabs(loadStartedDate.timeIntervalSinceNow) > self.loadTimeout {
+                    return
+                }
+                
                 self.setHandlerForKey("load") { (_: AnyObject!) in
                     self.loaded = true
                     handler()
@@ -90,7 +109,6 @@ public class JSEngine: NSObject {
         }
     }
     
-    private var originalSource: String?
     public var source: String? {
         get {
             return self.webView?.configuration.userContentController.userScripts.reduce("") {
@@ -100,10 +118,6 @@ public class JSEngine: NSObject {
         
         set {
             if let sourceString = newValue {
-                if self.source == nil {
-                    self.originalSource = sourceString
-                }
-                
                 // Construct new content controller
                 let contentController = WKUserContentController()
                 
