@@ -80,13 +80,15 @@ public class JSEngine: NSObject {
         
         set {
             self.loaded = false
-            let loadStartedDate = NSDate()
+            
+            // Handle timeout
+            var timeoutDidFire = false
             
             if newValue != nil {
-                // Handle timeout
-                let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(NSTimeInterval(NSEC_PER_SEC) * self.loadTimeout))
-                dispatch_after(timeout, dispatch_get_main_queue()) {
+                let timeoutInterval = dispatch_time(DISPATCH_TIME_NOW, Int64(NSTimeInterval(NSEC_PER_SEC) * self.loadTimeout))
+                dispatch_after(timeoutInterval, dispatch_get_main_queue()) {
                     if !self.loaded {
+                        timeoutDidFire = true
                         self.handlerForKey("error")?("JSEngineTimeout")
                     }
                 }
@@ -94,8 +96,8 @@ public class JSEngine: NSObject {
             
             // Set handler
             if let handler = newValue {
-                // Load eventually completed. Ignore it.
-                if fabs(loadStartedDate.timeIntervalSinceNow) > self.loadTimeout {
+                if timeoutDidFire {
+                    // Load eventually completed. Ignore it.
                     return
                 }
                 
