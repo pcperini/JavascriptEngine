@@ -58,7 +58,7 @@ class WKWebView_JSEngineInjectionTests: XCTestCase {
         
         webView.injectEngine(engine)
         engine.load {
-            let call = engine.signatureForFunction("testFunc")
+            let call = JSEngine.signatureForFunction("testFunc")
             webView.evaluateJavaScript(call!) { (_: (AnyObject!, NSError!)) in
                 webView.evaluateJavaScript("testGlobalVar") { (result: (AnyObject!, NSError!)) in
                     XCTAssertNotNil(result.0 as? String, "Result is not a string")

@@ -168,7 +168,7 @@ public class JSEngine: NSObject {
         return self.messageHandlers[key]
     }
     
-    public func signatureForFunction(function: String, thisArg: String = "null", args: [AnyObject] = []) -> String? {
+    public class func signatureForFunction(function: String, thisArg: String = "null", args: [AnyObject] = []) -> String? {
         let argsString = NSString(data: NSJSONSerialization.dataWithJSONObject(args,
             options: nil,
             error: nil) ?? NSData(),
@@ -211,7 +211,7 @@ public class JSEngine: NSObject {
     }
     
     public func callFunction(function: String, thisArg: String = "null", args: [AnyObject] = []) {
-        if let call = self.signatureForFunction(function, thisArg: thisArg, args: args) {
+        if let call = JSEngine.signatureForFunction(function, thisArg: thisArg, args: args) {
             self.webView?.evaluateJavaScript(call, completionHandler: nil)
         } else {
             self.handlerForKey("error")?("Cannot parse args \(args)")
