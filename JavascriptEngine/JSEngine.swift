@@ -25,6 +25,8 @@ public class JSEngine: NSObject {
             for (key, _) in self.messageHandlers {
                 self.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
             }
+            
+            self.webView?.removeFromSuperview()
         }
         
         didSet {
@@ -44,6 +46,8 @@ public class JSEngine: NSObject {
                         userInfo: ["error": errObj, "source": self.source ?? NSNull()]).raise()
                 }
             }
+            
+            (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView!)
         }
     }
     
@@ -137,7 +141,6 @@ public class JSEngine: NSObject {
                 
                 self.webView = WKWebView(frame: CGRect(),
                     configuration: config)
-                (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView!)
                 
                 if self.loadHandler != nil { // Race condition, loadHandler has already been set.
                     self.load(handler: self.loadHandler)
