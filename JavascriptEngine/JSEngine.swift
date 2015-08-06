@@ -204,7 +204,7 @@ public class JSEngine: NSObject {
         
         let call = "try {" +
             "\(function).apply(\(thisArg), \(argsString!));" +
-            "} catch (err) {" +
+        "} catch (err) {" +
             "engine.error.postMessage(err + '');" +
         "}"
         
