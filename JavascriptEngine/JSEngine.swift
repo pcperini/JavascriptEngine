@@ -11,6 +11,19 @@ import WebKit
 import AFNetworking
 
 public class JSEngine: NSObject {
+    // MARK: Types
+    internal class Responder: NSObject, WKScriptMessageHandler {
+        // MARK: Properties
+        weak var engine: JSEngine! // Introduce a WEAK, circular depedency, to break WKWebView's STRONG circular dependency.
+        
+        // MARK: Responders
+        @objc func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.engine.handlerForKey(message.name)?(message.body)
+            }
+        }
+    }
+    
     // MARK: Constants
     private static let globalVars = "var engine = window.webkit.messageHandlers;"
     private static let mainFunc = "window.onload = function () {engine.load.postMessage(null);};"
@@ -19,6 +32,7 @@ public class JSEngine: NSObject {
     private(set) public var lastHTTPRequest: AFHTTPRequestOperation?
     public var loadTimeout: NSTimeInterval = 10.0
 
+    internal let responder: Responder
     private var webView: WKWebView? {
         willSet {
             // Remove old reference to self for scriptMessageHandler
@@ -36,14 +50,14 @@ public class JSEngine: NSObject {
             }
             
             if self.handlerForKey("httpRequest") == nil {
-                self.setHandlerForKey("httpRequest", handler: self.httpRequestHandler)
+                self.setHandlerForKey("httpRequest") { [unowned self] in
+                    self.httpRequestHandler($0)
+                }
             }
             
             if self.handlerForKey("error") == nil {
-                self.setHandlerForKey("error") { [unowned self] (errObj: AnyObject!) in
-                    NSException(name: "JSEngineJavascriptException",
-                        reason: "JSEngine threw a Javascript exception",
-                        userInfo: ["error": errObj, "source": self.source ?? NSNull()]).raise()
+                self.setHandlerForKey("error") { [unowned self] in
+                    self.defaultErrorHandler($0)
                 }
             }
             
@@ -151,7 +165,10 @@ public class JSEngine: NSObject {
     
     // MARK: Initializers
     public override init() {
+        self.responder = Responder()
         super.init()
+        
+        self.responder.engine = self
     }
     
     public convenience init(sourceString: String) {
@@ -192,7 +209,7 @@ public class JSEngine: NSObject {
         self.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
         
         if let _handler = handler {
-            self.webView?.configuration.userContentController.addScriptMessageHandler(self, name: key)
+            self.webView?.configuration.userContentController.addScriptMessageHandler(self.responder, name: key)
             self.messageHandlers[key] = _handler
         } else {
             self.messageHandlers.removeValueForKey(key)
@@ -219,16 +236,14 @@ public class JSEngine: NSObject {
     }
 }
 
-extension JSEngine: WKScriptMessageHandler {
-    @objc public func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.handlerForKey(message.name)?(message.body)
-        }
-    }
-}
-
 // MARK: Default Handlers
 private extension JSEngine {
+    private func defaultErrorHandler(errObj: AnyObject!) {
+        NSException(name: "JSEngineJavascriptException",
+            reason: "JSEngine threw a Javascript exception",
+            userInfo: ["error": errObj, "source": self.source ?? NSNull()]).raise()
+    }
+    
     private func httpRequestHandler(requestObject: AnyObject!) {
         if let request = requestObject as? NSDictionary {
             let responseHandler = requestObject["responseHandler"] as! String

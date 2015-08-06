@@ -70,4 +70,25 @@ class WKWebView_JSEngineInjectionTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(10, handler: nil)
     }
+    
+    func testWebViewRelease() {
+        let webView = WKWebView()
+        webView.loadHTMLString("<html>" +
+            "<body>" +
+                "<div id='test_id'>Hello!</div>" +
+            "</body>" +
+        "</html>", baseURL: nil)
+        
+        if (true) { // scope offset
+            let engine = JSEngine(sourceString: "" +
+                "engine.success.postMessage(document.getElementById('test_id') != null);" +
+            "")
+            
+            webView.injectEngine(engine)
+            XCTAssertGreaterThan(UIApplication.sharedApplication().keyWindow!.subviews.count, 1, "engine's web view not added to window")
+            // engine will fall out of scope, should take own web view with it
+        }
+        
+        XCTAssertLessThan(UIApplication.sharedApplication().keyWindow!.subviews.count, 2, "engine's web view not removed from window")
+    }
 }

@@ -17,7 +17,7 @@ public extension WKWebView {
                 forMainFrameOnly: true))
             
             for (key, _) in engine.messageHandlers {
-                self.configuration.userContentController.addScriptMessageHandler(engine, name: key)
+                self.configuration.userContentController.addScriptMessageHandler(engine.responder, name: key)
             }
         }
     }
