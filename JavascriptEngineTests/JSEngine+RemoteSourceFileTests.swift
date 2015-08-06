@@ -14,7 +14,7 @@ class JSEngine_RemoteSourceFileTests: XCTestCase {
     
     private class JSRemoteSourceFileTestDelegate: NSObject, JSRemoteSourceFileDelegate {
         var handler: ((JSRemoteSourceFile, String?) -> Void)?
-        func remoteSoureFile(file: JSRemoteSourceFile, didUpdateContent content: String?) {
+        @objc func remoteSoureFile(file: JSRemoteSourceFile, didUpdateContent content: String?) {
             self.handler?(file, content)
         }
     }

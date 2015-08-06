@@ -118,7 +118,7 @@ public class JSEngine: NSObject {
                 }
                 
                 // Set handler
-                self.setHandlerForKey("load") { (_: AnyObject!) in
+                self.setHandlerForKey("load") { [unowned self] (_: AnyObject!) in
                     if timeoutDidFire {
                         // Load eventually completed. Ignore it.
                         return
