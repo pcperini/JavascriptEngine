@@ -9,14 +9,14 @@
 import Foundation
 import AFNetworking
 
-public protocol JSRemoteSourceFileDelegate {
+@objc public protocol JSRemoteSourceFileDelegate {
     // MARK: Optionals
     func remoteSoureFile(file: JSRemoteSourceFile, didUpdateContent content: String?)
 }
 
 public class JSRemoteSourceFile: NSObject {
     // MARK: Properties
-    public var delegate: JSRemoteSourceFileDelegate?
+    public weak var delegate: JSRemoteSourceFileDelegate?
     
     private let fileName: String
     private let localCachePath: String

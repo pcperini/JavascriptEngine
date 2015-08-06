@@ -14,12 +14,19 @@ public class JSEngine: NSObject {
     // MARK: Types
     internal class Responder: NSObject, WKScriptMessageHandler {
         // MARK: Properties
-        weak var engine: JSEngine! // Introduce a WEAK, circular depedency, to break WKWebView's STRONG circular dependency.
+        weak var engine: JSEngine? { // Introduce a WEAK, circular depedency, to break WKWebView's STRONG circular dependency.
+            willSet {
+                // This should never get called. But it can, if someone fiddles with retaining the web view.
+                for (key, _) in self.engine?.messageHandlers ?? [:] {
+                    self.engine?.webView?.configuration.userContentController.removeScriptMessageHandlerForName(key)
+                }
+            }
+        }
         
         // MARK: Responders
         @objc func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
             dispatch_async(dispatch_get_main_queue()) {
-                self.engine.handlerForKey(message.name)?(message.body)
+                self.engine?.handlerForKey(message.name)?(message.body)
             }
         }
     }
