@@ -109,11 +109,13 @@ public class JSEngine: NSObject {
                 
                 // Handle timeout
                 var timeoutDidFire = false
-                let timeoutInterval = dispatch_time(DISPATCH_TIME_NOW, Int64(NSTimeInterval(NSEC_PER_SEC) * self.loadTimeout))
-                dispatch_after(timeoutInterval, dispatch_get_main_queue()) {
-                    if !self.loaded {
-                        timeoutDidFire = true
-                        self.handlerForKey("error")?("JSEngineTimeout")
+                if self.loadTimeout > 0 && self.loadTimeout < Double.infinity {
+                    let timeoutInterval = dispatch_time(DISPATCH_TIME_NOW, Int64(NSTimeInterval(NSEC_PER_SEC) * self.loadTimeout))
+                    dispatch_after(timeoutInterval, dispatch_get_main_queue()) {
+                        if !self.loaded {
+                            timeoutDidFire = true
+                            self.handlerForKey("error")?("JSEngineTimeout")
+                        }
                     }
                 }
                 
