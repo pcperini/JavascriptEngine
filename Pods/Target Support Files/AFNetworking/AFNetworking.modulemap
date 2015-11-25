@@ -1,5 +1,5 @@
 framework module AFNetworking {
-  umbrella header "Pods-AFNetworking-umbrella.h"
+  umbrella header "AFNetworking-umbrella.h"
 
   export *
   module * { export * }

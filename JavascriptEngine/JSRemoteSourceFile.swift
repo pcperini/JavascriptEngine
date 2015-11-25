@@ -101,7 +101,7 @@ public class JSRemoteSourceFile: NSObject {
                     self.updateContent(self.remoteRetryDelay)
                 }
                 
-            }, failure: { (op: AFHTTPRequestOperation!, error: NSError!) in
+            }, failure: { (op: AFHTTPRequestOperation?, error: NSError?) in
                 self.updatingFromRemote = false
                 self.updateContent(self.remoteRetryDelay)
             })

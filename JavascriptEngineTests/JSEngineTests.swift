@@ -33,8 +33,8 @@ class JSEngineTests: XCTestCase {
         
         let message = "hello world"
         engine.debugHandler = {
-            XCTAssertNotNil($0 as! String, "Debug message is not string")
-            XCTAssertEqual($0 as! String, message, "Debug message was wrong")
+            XCTAssertNotNil($0 as? String, "Debug message is not string")
+            XCTAssertEqual($0 as? String, message, "Debug message was wrong")
             expectation.fulfill()
         }
         
@@ -54,7 +54,7 @@ class JSEngineTests: XCTestCase {
         let message = "hello world"
         engine.errorHandler = {
             XCTAssertNotNil($0, "Error message is nil")
-            XCTAssertEqual($0.userInfo["error"] as! String, message, "Error message was wrong")
+            XCTAssertEqual($0.userInfo["error"] as? String, message, "Error message was wrong")
             expectation.fulfill()
         }
         
@@ -109,8 +109,8 @@ class JSEngineTests: XCTestCase {
         
         let message = "hello world"
         engine.setHandlerForKey("testHandler") {
-            XCTAssertNotNil($0 as! String, "Response is not string")
-            XCTAssertEqual($0 as! String, message, "Response does not equal message")
+            XCTAssertNotNil($0 as? String, "Response is not string")
+            XCTAssertEqual($0 as? String, message, "Response does not equal message")
             
             expectation.fulfill()
         }

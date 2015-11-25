@@ -266,7 +266,7 @@ private extension JSEngine {
             
             // Get method
             let methodString = requestObject["method"] as? String ?? "GET"
-            let method: ((URLString: String!, parameters: AnyObject!, success: ((AFHTTPRequestOperation!, AnyObject!) -> Void)!, failure: ((AFHTTPRequestOperation!, NSError!) -> Void)!) -> AFHTTPRequestOperation!)
+            let method: ((URLString: String, parameters: AnyObject?, success: ((AFHTTPRequestOperation?, AnyObject?) -> Void)?, failure: ((AFHTTPRequestOperation?, NSError?) -> Void)?) -> AFHTTPRequestOperation?)
             
             switch (methodString) {
             case "GET":
@@ -281,17 +281,17 @@ private extension JSEngine {
                 method = networkManager.PATCH
                 
             case "HEAD":
-                method = { (URLString: String!, parameters: AnyObject!, success: ((AFHTTPRequestOperation!, AnyObject!) -> Void)!, failure: ((AFHTTPRequestOperation!, NSError!) -> Void)!) in
+                method = { (URLString: String, parameters: AnyObject?, success: ((AFHTTPRequestOperation?, AnyObject?) -> Void)?, failure: ((AFHTTPRequestOperation?, NSError?) -> Void)?) in
                     return networkManager.HEAD(URLString,
                         parameters: parameters,
                         success: { (op: AFHTTPRequestOperation!) -> Void in
-                            success(op, NSNull())
+                            success?(op, NSNull())
                     }, failure: failure)
                 }
                 
             default:
-                method = { (URLString: String!, parameters: AnyObject!, success: ((AFHTTPRequestOperation!, AnyObject!) -> Void)!, failure: ((AFHTTPRequestOperation!, NSError!) -> Void)!) in
-                    failure(nil, nil)
+                method = { (URLString: String, parameters: AnyObject?, success: ((AFHTTPRequestOperation?, AnyObject?) -> Void)?, failure: ((AFHTTPRequestOperation?, NSError?) -> Void)?) in
+                    failure?(nil, nil)
                     return nil
                 }
             }
@@ -319,7 +319,7 @@ private extension JSEngine {
             
             // Make call
             let userInfo = requestObject["userInfo"] as? NSDictionary ?? NSDictionary()
-            method(URLString: path, parameters: allParams, success: { (op: AFHTTPRequestOperation!, resp: AnyObject!) in
+            method(URLString: path, parameters: allParams, success: { (op: AFHTTPRequestOperation?, resp: AnyObject?) in
                 self.lastHTTPRequest = op
                 
                 let respString: String
@@ -334,13 +334,13 @@ private extension JSEngine {
                     userInfo,
                     NSNull()
                 ])
-            }, failure: { (op: AFHTTPRequestOperation!, error: NSError!) in
+            }, failure: { (op: AFHTTPRequestOperation?, error: NSError?) in
                 self.lastHTTPRequest = op
                 
                 self.callFunction(responseHandler, args: [
                     "",
                     userInfo,
-                    error.localizedDescription
+                    error?.localizedDescription ?? ""
                 ])
             })
         }

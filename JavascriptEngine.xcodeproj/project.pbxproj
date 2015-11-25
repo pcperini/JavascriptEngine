@@ -26,8 +26,8 @@
 		73FF3C3F1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FF3C3E1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift */; };
 		73FF3C401B6BCA73006816AE /* WKWebView+JSEngineInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FF3C3E1B6BCA73006816AE /* WKWebView+JSEngineInjection.swift */; };
 		73FF3C431B6BCD2A006816AE /* WKWebView+JSEngineInjectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FF3C411B6BCD2A006816AE /* WKWebView+JSEngineInjectionTests.swift */; };
-		857FC5FF1A87DBA9B9DE0E8E /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E14ECDA771EEA20E41EB1DC2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		AFCD82630ABB69EE2E7A6D4D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E14ECDA771EEA20E41EB1DC2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		857FC5FF1A87DBA9B9DE0E8E /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E14ECDA771EEA20E41EB1DC2 /* Pods.framework */; };
+		AFCD82630ABB69EE2E7A6D4D /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E14ECDA771EEA20E41EB1DC2 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
