@@ -54,7 +54,7 @@ class JSEngineTests: XCTestCase {
         let message = "hello world"
         engine.errorHandler = {
             XCTAssertNotNil($0, "Error message is nil")
-            XCTAssertEqual($0.userInfo?["error"] as! String, message, "Error message was wrong")
+            XCTAssertEqual($0.userInfo["error"] as! String, message, "Error message was wrong")
             expectation.fulfill()
         }
         
@@ -141,7 +141,7 @@ class JSEngineTests: XCTestCase {
         engine.loadTimeout = 2.0
         engine.errorHandler = { (err: NSError!) in
             XCTAssertNotNil(err, "Error not present")
-            XCTAssertEqual((err.userInfo?["error"] as? String) ?? "", "JSEngineTimeout", "Error is not JSEngineTimeout")
+            XCTAssertEqual((err.userInfo["error"] as? String) ?? "", "JSEngineTimeout", "Error is not JSEngineTimeout")
             
             expectation.fulfill()
         }

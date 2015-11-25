@@ -58,7 +58,7 @@ class JSRemoteSourceFileTests: XCTestCase {
             if repeatLocally {
                 // This test takes advantage of the fact that colliding file names will reference the same source.
                 // This is intentional.
-                let remoteSourceFile = JSRemoteSourceFile(remoteURL: NSURL(fileURLWithPath: remoteURL.lastPathComponent!)!)
+                let remoteSourceFile = JSRemoteSourceFile(remoteURL: NSURL(fileURLWithPath: remoteURL.lastPathComponent!))
                 remoteSourceFile.delegate = remoteSourceFileDelegate
 
                 repeatLocally = false

@@ -58,7 +58,7 @@ public class JSRemoteSourceFile: NSObject {
         let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.CachesDirectory,
             NSSearchPathDomainMask.UserDomainMask,
             true)
-        self.localCachePath = paths.first!.stringByAppendingPathComponent(self.fileName)
+        self.localCachePath = (paths.first! as NSString).stringByAppendingPathComponent(self.fileName)
         
         super.init()
         
@@ -78,7 +78,7 @@ public class JSRemoteSourceFile: NSObject {
         if retryDelay > 0.0 {
             let afterTime = Int64(NSTimeInterval(NSEC_PER_SEC) * retryDelay)
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, afterTime), dispatch_get_main_queue()) {
-                self.updateContent(retryDelay: 0.0)
+                self.updateContent(0.0)
             }
             
             return
@@ -98,12 +98,12 @@ public class JSRemoteSourceFile: NSObject {
                 
                 self.updatingFromRemote = false
                 if self.content == nil {
-                    self.updateContent(retryDelay: self.remoteRetryDelay)
+                    self.updateContent(self.remoteRetryDelay)
                 }
                 
             }, failure: { (op: AFHTTPRequestOperation!, error: NSError!) in
                 self.updatingFromRemote = false
-                self.updateContent(retryDelay: self.remoteRetryDelay)
+                self.updateContent(self.remoteRetryDelay)
             })
         }
     }
@@ -111,9 +111,8 @@ public class JSRemoteSourceFile: NSObject {
     private func updateContentFromFileAtPath(filePath: String) {
         self.updatingFromLocal = true
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-            let content = NSString(contentsOfFile: filePath,
-                encoding: NSUTF8StringEncoding,
-                error: nil) as String?
+            let content = (try? NSString(contentsOfFile: filePath,
+                encoding: NSUTF8StringEncoding)) as String?
             
             dispatch_async(dispatch_get_main_queue()) {
                 self.content = content
@@ -124,10 +123,9 @@ public class JSRemoteSourceFile: NSObject {
     
     private func saveContentToFileAtPath(filePath: String) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-            self.content?.writeToFile(filePath,
+            let _ = try? self.content?.writeToFile(filePath,
                 atomically: true,
-                encoding: NSUTF8StringEncoding,
-                error: nil)
+                encoding: NSUTF8StringEncoding)
         }
     }
     

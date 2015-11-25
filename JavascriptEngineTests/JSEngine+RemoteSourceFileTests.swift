@@ -27,8 +27,8 @@ class JSEngine_RemoteSourceFileTests: XCTestCase {
         
         let message = "hello world"
         engine.debugHandler = {
-            XCTAssertNotNil($0 as! String, "Debug message is not string")
-            XCTAssertEqual($0 as! String, message, "Debug message was wrong")
+            XCTAssertNotNil($0 as? String, "Debug message is not string")
+            XCTAssertEqual($0 as? String, message, "Debug message was wrong")
             expectation.fulfill()
         }
         

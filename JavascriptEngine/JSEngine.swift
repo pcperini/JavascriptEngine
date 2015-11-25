@@ -68,7 +68,7 @@ public class JSEngine: NSObject {
                 }
             }
             
-            (UIApplication.sharedApplication().windows.first as? UIWindow)?.addSubview(self.webView!)
+            UIApplication.sharedApplication().windows.first?.addSubview(self.webView!)
         }
     }
     
@@ -85,7 +85,7 @@ public class JSEngine: NSObject {
         
         set {
             self.setHandlerForKey("error") { (errObject: AnyObject!) in
-                let err = NSError(domain: __FILE__.lastPathComponent, code: -1, userInfo: ["error": errObject])
+                let err = NSError(domain: (__FILE__ as NSString).lastPathComponent, code: -1, userInfo: ["error": errObject])
                 newValue(err)
             }
         }
@@ -95,7 +95,7 @@ public class JSEngine: NSObject {
     private var loadHandler: (() -> Void)? {
         get {
             if let handler = self.handlerForKey("load") {
-                return { [unowned self] in
+                return {
                     handler(nil)
                 }
             } else {
@@ -138,7 +138,7 @@ public class JSEngine: NSObject {
     public var source: String? {
         get {
             return self.webView?.configuration.userContentController.userScripts.reduce("") {
-                "\($0!)\n\($1.source!)"
+                "\($0!)\n\($1.source)"
             }
         }
         
@@ -166,7 +166,7 @@ public class JSEngine: NSObject {
                     configuration: config)
                 
                 if self.loadHandler != nil { // Race condition, loadHandler has already been set.
-                    self.load(handler: self.loadHandler)
+                    self.load(self.loadHandler)
                 }
             }
         }
@@ -195,9 +195,8 @@ public class JSEngine: NSObject {
     }
     
     public class func signatureForFunction(function: String, thisArg: String = "null", args: [AnyObject] = []) -> String? {
-        let argsString = NSString(data: NSJSONSerialization.dataWithJSONObject(args,
-            options: nil,
-            error: nil) ?? NSData(),
+        let argsString = NSString(data: (try? NSJSONSerialization.dataWithJSONObject(args,
+            options: [])) ?? NSData(),
             encoding: NSUTF8StringEncoding)
         
         if argsString == nil {
@@ -254,12 +253,12 @@ private extension JSEngine {
     }
     
     private func httpRequestHandler(requestObject: AnyObject!) {
-        if let request = requestObject as? NSDictionary {
+        if let requestObject = requestObject as? NSDictionary {
             let responseHandler = requestObject["responseHandler"] as! String
             
             // Get URL
             let baseURL = NSURL(string: (requestObject["baseURL"] as? String) ?? "")
-            var path = requestObject["path"] as? String ?? "/"
+            let path = requestObject["path"] as? String ?? "/"
             
             let networkManager = AFHTTPRequestOperationManager(baseURL: baseURL)
             networkManager.responseSerializer = AFHTTPResponseSerializer()
